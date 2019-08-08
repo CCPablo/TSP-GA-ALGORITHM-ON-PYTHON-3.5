@@ -30,12 +30,16 @@ Madrid – London – Paris – Berlin – Rome – Madrid : 152 – 55 = 97
   - Is the solution innovative?
   - Have you followed best practices? (extra point)
 
-
-## SOLUTION
-
-My implementation is based on Python. I have added libraries: DEAP, NUMPY, MATHPLOTLIB.
-
 ## NAME
 
 Pablo Caravaca Calvo
 
+## SOLUTION
+
+![Alt text](evolution.png?raw=true "Title")
+
+Best route path found: Madrid -> Roma -> Berlin -> Paris -> Londres -> Paris -> Madrid
+
+Score: 91
+
+My implementation is based on Python. I have used external libraries: DEAP, NUMPY, MATHPLOTLIB.
