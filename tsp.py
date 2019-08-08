@@ -13,7 +13,7 @@ from deap import tools
 ##  Importing data from JSON file
 ##
 
-with open("gr17.json", "r") as jsondata:
+with open("exercise1.json", "r") as jsondata:
     jsondata = json.load(jsondata)
 
 cities = jsondata["cities"]
