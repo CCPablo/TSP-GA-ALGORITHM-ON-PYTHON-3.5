@@ -14,7 +14,7 @@ from deap import tools
 ##  Importing data from JSON file
 ##
 
-if(len(sys.argv) == 3):
+if(len(sys.argv) == 5):
     trip_len = int(sys.argv[2])
     with open(sys.argv[1], "r") as jsondata:
         jsondata = json.load(jsondata)
@@ -177,8 +177,13 @@ toolbox.decorate("evaluate", tools.DeltaPenalty(feasible,-20, routeQ)) # penaliz
 def main():
     random.seed(0)
     
-    CXPB, MUTPB, NIND, NGEN = 0.5, 0.3, 50, 50
+    if(len(sys.argv)!=5):
+        NIND, NGEN = 200, 100
+    else:
+        NIND, NGEN = int(sys.argv[3]), int(sys.argv[4])
     pop = toolbox.population(NIND)
+    
+    CXPB, MUTPB = 0.5, 0.3
 
     #   Save best individual and register data
     hof = tools.HallOfFame(1)
