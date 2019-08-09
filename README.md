@@ -54,9 +54,13 @@ My implementation is based on Python. I have used external libraries: DEAP, NUMP
 - Changed population first generation (function routeInit()). Now the first individual is partially routed.
 - Defined new function for mutation. It generates random links in the route.
 
-called as 
-python3 tsp.py json_file_name.json trip_size
-
 With this solution, the algorithm requires much less number of generations and size of population, and is more flexible to find new routes when the algorithm has already found some valid ones.
 
+Called as:
+
+python3 tsp.py json_file_name.json trip_size population_size generations_size
+
+Default execution:
+
+python3 tsp.py exercise1.json 7 200 100
 
