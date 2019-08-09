@@ -60,7 +60,7 @@ Called as:
 
 - python3 tsp.py json_file_name.json trip_length population_size generations_number
 
-Default arguments:
+Default arguments: (The optimal solution can actually be achieved with 10 individuals in 15 generations)
 
 - exercise1.json, 7, 200, 100
 
