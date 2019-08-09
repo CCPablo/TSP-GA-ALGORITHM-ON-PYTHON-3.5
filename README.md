@@ -58,7 +58,7 @@ With this solution, the algorithm requires much less number of generations and s
 
 Called as:
 
-- python3 tsp.py json_file_name.json trip_size population_size generations_size
+- python3 tsp.py json_file_name.json trip_length population_size generations_number
 
 Default arguments:
 
