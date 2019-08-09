@@ -20,7 +20,7 @@ if(len(sys.argv) == 3):
         jsondata = json.load(jsondata)
 else:
     trip_len = 7
-    with open("gr17.json", "r") as jsondata:
+    with open("exercise1.json", "r") as jsondata:
         jsondata = json.load(jsondata)
 
 cities = jsondata["cities"]
