@@ -1,3 +1,4 @@
+import sys
 import random
 import json
 
@@ -13,8 +14,14 @@ from deap import tools
 ##  Importing data from JSON file
 ##
 
-with open("exercise1.json", "r") as jsondata:
-    jsondata = json.load(jsondata)
+if(len(sys.argv) == 3):
+    trip_len = int(sys.argv[2])
+    with open(sys.argv[1], "r") as jsondata:
+        jsondata = json.load(jsondata)
+else:
+    trip_len = 7
+    with open("gr17.json", "r") as jsondata:
+        jsondata = json.load(jsondata)
 
 cities = jsondata["cities"]
 cities_name = [i["name"] for i in cities]
@@ -44,29 +51,28 @@ for i in range(ncities):
 ##
 ##  Auxialiary functions for the GA
 ##
-    
-#   Set the first generator for the feneration of individual
-#   First and last city known (Madrid)
-#   Rest uniformly random
-def routeInit():
-    route = random.sample(range(9),7)
-    route[0] = city_base;
-    route[-1] = city_base;
-    return route
 
-#   Evaluation function
-def evalTSP(individual):
-    cost = 0
-    incentive = 0;
+#   Find a valid random flight to the city corresponding to 'pos'
+def findFlight(individual, pos):
+    posibles = []
+    for j in range(ncities):
+        if (cost_matrix[individual[pos-1]][j] != 0):
+            posibles.append(j)
+    if(len(posibles) == 0):
+        return random.randint(0,ncities-1)
+    return random.choice(posibles)
     
-    for gene1, gene2 in zip(individual[0:-1], individual[1:]):
-        cost += cost_matrix[gene1][gene2]
-        
-    for i in range(len(individual)):
-        if(i in individual):
-            incentive += cities_reward[i];
-        
-    return (incentive - cost),
+#   Set the first generator for the generation of individual
+#   First and last city known (Madrid)
+#   Rest of cities linked randomly
+def routeInit():
+    route = []
+    route.append(city_base)
+    for i in range(1,trip_len-1):
+        route.append(findFlight(route,i))
+            
+    route.append(city_base)
+    return route
 
 #   Feasible function is used for penalize indivuals with wrong structure
 #   Penalty will be equal to 20 plus a bonus taken from routeQ function (line 141)
@@ -95,6 +101,32 @@ def routeQ(individual):
             q += 4
         
     return q
+
+#   Evaluation function
+def evalTSP(individual):
+    cost = 0
+    incentive = 0;
+    
+    for gene1, gene2 in zip(individual[0:-1], individual[1:]):
+        cost += cost_matrix[gene1][gene2]
+        
+    for i in range(len(individual)):
+        if(i in individual):
+            incentive += cities_reward[i];
+        
+    return (incentive - cost),
+    
+#   Mutation in which random cities are randomly linked
+def mutMakeConnection(individual, p):
+    
+    for i in range(1,len(individual)-1):
+        if(random.random() < p):
+            individual[i] = findFlight(individual,i)
+            individual[i+1] = findFlight(individual,i+1)
+    individual[0] = city_base
+    individual[-1] = city_base
+    
+    return individual,
 
 #   Plot the evolution of the algorithm when it's finished
 #   Reresents minimun and maximun of each generation
@@ -133,8 +165,8 @@ toolbox.register("indices", routeInit)
 toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.indices)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-toolbox.register("mate", tools.cxTwoPoints)
-toolbox.register("mutate", tools.mutFlipBit, indpb = 0.1) # mutation
+toolbox.register("mate", tools.cxTwoPoints) # crossover
+toolbox.register("mutate", mutMakeConnection, p = 0.5) # mutation
 toolbox.register("select", tools.selTournament, tournsize=3) # selection
 toolbox.register("evaluate", evalTSP) # evaluation
 toolbox.decorate("evaluate", tools.DeltaPenalty(feasible,-20, routeQ)) # penalization
@@ -143,12 +175,9 @@ toolbox.decorate("evaluate", tools.DeltaPenalty(feasible,-20, routeQ)) # penaliz
 #%%
 
 def main():
-    random.seed(80)
+    random.seed(0)
     
-    #   As the algorithm converge rapidly to a solution and tends to stay around it,
-    #   the population is set to a higher value, and number of generations to a lower value
-    #   This will provide the algorithm with a better ability to match with the optimal solution
-    CXPB, MUTPB, NIND, NGEN = 0.8, 0.1, 500, 40
+    CXPB, MUTPB, NIND, NGEN = 0.5, 0.3, 50, 50
     pop = toolbox.population(NIND)
 
     #   Save best individual and register data
