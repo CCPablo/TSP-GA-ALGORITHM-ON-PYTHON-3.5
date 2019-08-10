@@ -50,7 +50,9 @@ My implementation is based on Python. I have used external libraries: DEAP, NUMP
 
 - Added command line arguments. Arguments:
   - JSON file.
-  - Trip size
+  - Trip length.
+  - Population size.
+  - Number of generations.
 - Changed population first generation (function routeInit()). Now the first individual is partially routed.
 - Defined new function for mutation. It generates random links in the route.
 
