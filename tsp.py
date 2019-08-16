@@ -37,7 +37,7 @@ nconnections = len(connections);
 
 #   This matrix contains the fuel cost for travelling throught cities
 
-cost_matrix = [[0 for i in range(ncities)] for j in range(ncities)]
+cost_matrix = [[-1 for i in range(ncities)] for j in range(ncities)]
 
 for i in range(ncities):
     for j in range(nconnections):
@@ -56,7 +56,7 @@ for i in range(ncities):
 def findFlight(individual, pos):
     posibles = []
     for j in range(ncities):
-        if (cost_matrix[individual[pos-1]][j] != 0):
+        if (cost_matrix[individual[pos-1]][j] != -1):
             posibles.append(j)
     if(len(posibles) == 0):
         return random.randint(0,ncities-1)
@@ -81,7 +81,7 @@ def feasible(individual):
         return False
         
     for gene1, gene2 in zip(individual[0:-1], individual[1:]):
-        if (cost_matrix[gene1][gene2] == 0):
+        if (cost_matrix[gene1][gene2] == -1):
             return False
         
     return True
@@ -97,7 +97,7 @@ def routeQ(individual):
         q += 20
 
     for gene1, gene2 in zip(individual[0:-1], individual[1:]):
-        if (cost_matrix[gene1][gene2] == 0):
+        if (cost_matrix[gene1][gene2] == -1):
             q += 4
         
     return q
@@ -189,10 +189,6 @@ def main():
     hof = tools.HallOfFame(1)
     stats = tools.Statistics(lambda ind: ind.fitness.values)
     stats.register("avg", numpy.mean)
-    stats.register("std", numpy.std)
-    stats.register("min", numpy.min)
-    stats.register("max", numpy.max)
-    
     stats.register("std", numpy.std)
     stats.register("min", numpy.min)
     stats.register("max", numpy.max)
